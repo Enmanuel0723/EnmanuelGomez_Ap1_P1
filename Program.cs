@@ -1,14 +1,22 @@
 using EnmanuelGomez_Ap1_P1.Components;
+using EnmanuelGomez_Ap1_P1.DAL;
+using EnmanuelGomez_Ap1_P1.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+var ConStr = builder.Configuration.GetConnectionString("conStr");
+
+builder.Services.AddDbContext<Contexto>(o => o.UseSqlite(ConStr));
+builder.Services.AddScoped<RegistroServices>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
