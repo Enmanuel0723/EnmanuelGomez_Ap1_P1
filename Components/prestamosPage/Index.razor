@@ -1,0 +1,73 @@
+﻿@page "/Prestamos/Index"
+
+@rendermode InteractiveServer
+@inject NavigationManager navigationManager
+@inject PrestamosService prestamosService
+
+<PageTitle>Prestamos Index</PageTitle>
+<div class="container">
+	<div class="card shadow-lg">
+		<div class="card-header">
+			<h3 class="card-title text-center"><strong>Prestamos</strong></h3>
+		</div>
+		<div class="card-body">
+			
+			<div class="row">
+				<div class="col text-end">
+					<a href="/Prestamos/Create" class="btn btn-success" type="button"><span class="bi bi-plus-square"></span> Crear </a>
+				</div>
+			</div>
+			<table class="table table-bordered text-center">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Deudor</th>
+						<th>Concepto</th>
+						<th>Monto</th>
+						<th>Ver</th>
+						<th>Editar</th>
+						<th>Eliminar</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach(var prestamos in ListaPrestamos)
+					{
+						<tr>
+							<td>@prestamos.Id</td>
+							<td>@prestamos.Deudor</td>
+							<td>@prestamos.Concepto</td>
+							<td>RD$ @prestamos.Monto</td>
+							<td>
+								<a type="button" class="btn btn-primary btn-outline-light bi bi-eye"
+								   href="/Prestamos/Details/@prestamos.Id"></a>
+							</td>
+							<td>
+								<a type="button" class="btn btn-outline-dark btn-outline-light bi bi-pencil-square"
+								   href="/Prestamos/Edit/@prestamos.Id"></a>
+							</td>
+							<td>
+								<a type="button" class="btn btn-outline-dark btn-outline-light bi bi-trash"
+								   href="/Prestamos/Delete/@prestamos.Id"></a>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+		<div class="card-footer">
+			<p><strong>Cantidad de Prestamos: </strong>@ListaPrestamos.Count</p>
+		</div>
+	</div>
+</div>
+
+@code {
+	public Prestamos Prestamo { get; set; } = new Prestamos();
+	public List<Prestamos> ListaPrestamos { get; set; } = new List<Prestamos>();
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		ListaPrestamos = await prestamosService.Listar(lp => lp.Id > 0);
+
+	}	
+}

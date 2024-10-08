@@ -1,0 +1,78 @@
+﻿@page "/Prestamos/Edit/{ID:int}"
+
+@inject PrestamosService prestamosService
+@rendermode InteractiveServer
+@inject NavigationManager navigationManager
+
+<PageTitle>Prestamo Edit</PageTitle>
+<EditForm Model="@Prestamo" OnValidSubmit="Guardar">
+	<DataAnnotationsValidator />
+	<div class="container">
+		<div class="card shadow-lg">
+			<div class="card-header">
+				<h5 class="card-title">Crear Nuevo Prestamo</h5>
+			</div>
+
+			<div class="card-body">
+				<div>
+					<label><strong>ID:</strong></label>
+					<InputNumber class="form-control" readonly @bind-Value="@Prestamo.Id"></InputNumber>
+				</div>
+
+				<div>
+					<label><strong>Deudor:</strong></label>
+					<InputText class="form-control" @bind-Value="@Prestamo.Deudor"></InputText>
+					<ValidationMessage For="@(() => Prestamo.Deudor)"></ValidationMessage>
+				</div>
+
+				<div>
+					<label><strong>Concepto:</strong></label>
+					<InputText class="form-control" @bind-Value="@Prestamo.Concepto"></InputText>
+					<ValidationMessage For="@(() => Prestamo.Concepto)"></ValidationMessage>
+				</div>
+
+				<div>
+					<label><strong>Monto:</strong></label>
+					<InputNumber class="form-control" @bind-Value="@Prestamo.Monto"></InputNumber>
+				</div>
+			</div>
+
+			<div class="card-footer">
+				<a href="/Prestamos/Index" class="btn btn-primary" type="button">
+					<span class="bi bi-arrow-left mt-3">   Volver</span>
+				</a>
+                <button type="submit" class="btn btn-success bi bi-floppy">    Guardar</button>
+			</div>
+		</div>
+	</div>
+</EditForm>
+
+@code {
+	[Parameter]
+	public int ID { get; set; }
+	public Prestamos Prestamo { get; set; } = new Prestamos();
+	public string Mensaje { get; set; } = string.Empty;
+
+
+	public async Task Guardar()
+	{
+		var modificado = await prestamosService.Guardar(Prestamo);
+
+		if (modificado)
+		{
+			Mensaje = "Se ha modifico el prestamo";
+			navigationManager.NavigateTo("/Prestamos/Index");
+			return;
+		}
+		else
+		{
+			Mensaje = "No se modifico el prestamo...";
+			return;
+		}
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		Prestamo = await prestamosService.Buscar(ID);
+	}
+}

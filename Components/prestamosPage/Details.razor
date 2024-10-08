@@ -1,0 +1,60 @@
+﻿﻿
+
+@page "/Prestamos/Details/{Id:int}"
+@rendermode InteractiveServer
+@inject PrestamosService servicio
+@inject NavigationManager navigation
+
+
+<PageTitle>Details Pretamo</PageTitle>
+
+@if (pretamos != null)
+{
+    @*Header*@
+    <div class="card-header bg-primary text-white text-center">
+        <h3><strong>Eliminar Prestamo</strong></h3>
+    </div>
+    <div class="container">
+        <div class="card shadow-lg">
+            @*Header*@
+            <div class="card-body">
+                <h5><strong>Detalles del prestamo</strong></h5>
+                <div class="mb-1">
+                    <p class="mb-0">Id: @pretamos.Id</p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Deudor: @pretamos.Deudor</p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Concepto: @pretamos.Concepto </p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Monto: @pretamos.Monto </p>
+                </div>
+            </div>
+            @*Footer*@
+            <div class="card-footer">
+                <a type="button" href="/Prestamos/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Volver </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>No se encontró ningún cliente con ese ID</p>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Prestamos pretamos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (Id > 0)
+        {
+            pretamos = await servicio.Buscar(Id);
+        }
+    }
+}
